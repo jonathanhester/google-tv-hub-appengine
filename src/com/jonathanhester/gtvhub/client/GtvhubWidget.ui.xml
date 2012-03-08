@@ -1,0 +1,36 @@
+<ui:UiBinder
+    xmlns:ui='urn:ui:com.google.gwt.uibinder'
+    xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:gtvhub="urn:import:com.jonathanhester.gtvhub.client">
+    <g:HTMLPanel>
+    <div id="widget">
+        <div id="header">
+            <div ui:field="status" class="status none"></div>
+            <p>Try out roundtripping data to App Engine.</p>
+            <g:Button ui:field="sayHelloButton">Say Hello</g:Button>
+        </div>
+
+        <div class="field">
+            <p>Select a Google TV</p>
+            <div class="roundRect">
+                <gtvhub:GtvSelection ui:field="tvSelection" width="100%"></gtvhub:GtvSelection>
+            </div>
+        </div>
+        <div ui:field="pushLinkContainer" class="field">
+            <p>Link to push</p>
+            <input ui:field="linkToPush" type="text" class="field" size="62"
+                    placeholder="http://google.com" />
+            <g:Button ui:field="sendLinkButton">Push Link to TV</g:Button>
+        </div>
+        
+        <div class="field">
+        	<p>Add a Google TV</p>
+        	<input ui:field="tvCode" type="text" class="field" size="62"
+                    placeholder="Enter code displayed by Google TV device" />
+        	<input ui:field="tvName" type="text" class="field" size="62"
+                    placeholder="Enter your name for this tv" />
+            <g:Button ui:field="addTvButton">Add TV</g:Button>
+        </div>
+        
+    </div>
+   </g:HTMLPanel>
+</ui:UiBinder>
