@@ -40,12 +40,12 @@ public interface MyRequestFactory extends RequestFactory {
 		/**
 		 * Register a device for C2DM messages.
 		 */
-		InstanceRequest<RegistrationInfoProxy, Void> register();
+		InstanceRequest<RegistrationInfoProxy, String> register();
 
 		/**
 		 * Unregister a device for C2DM messages.
 		 */
-		InstanceRequest<RegistrationInfoProxy, Void> unregister();
+		InstanceRequest<RegistrationInfoProxy, String> unregister();
 	}
 
 	@ServiceName("com.jonathanhester.gtvhub.server.Message")

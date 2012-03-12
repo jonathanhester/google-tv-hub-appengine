@@ -5,8 +5,7 @@
     <div id="widget">
         <div id="header">
             <div ui:field="status" class="status none"></div>
-            <p>Try out roundtripping data to App Engine.</p>
-            <g:Button ui:field="sayHelloButton">Say Hello</g:Button>
+            <p>Welcome to your Google TV console.</p>
         </div>
 
         <div class="field">
@@ -21,7 +20,9 @@
                     placeholder="http://google.com" />
             <g:Button ui:field="sendLinkButton">Push Link to TV</g:Button>
         </div>
-        
+        <br />
+        <br />
+        <br />
         <div class="field">
         	<p>Add a Google TV</p>
         	<input ui:field="tvCode" type="text" class="field" size="62"

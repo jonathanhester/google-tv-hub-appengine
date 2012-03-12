@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -65,9 +66,6 @@ public class GtvhubWidget extends Composite {
   DivElement status;
 
   @UiField
-  Button sayHelloButton;
-
-  @UiField
   Button sendLinkButton;
   
   @UiField
@@ -87,7 +85,6 @@ public class GtvhubWidget extends Composite {
     public void run() {
       status.setInnerText("");
       status.setClassName(STATUS_NONE);
-      linkToPush.setValue("");
     }
   };
 
@@ -108,7 +105,6 @@ public class GtvhubWidget extends Composite {
 
   public GtvhubWidget() {
     initWidget(uiBinder.createAndBindUi(this));
-    sayHelloButton.getElement().setClassName("send centerbtn");
     sendLinkButton.getElement().setClassName("send");
     addTvButton.getElement().setClassName("send");
     
@@ -120,6 +116,7 @@ public class GtvhubWidget extends Composite {
     gtvRequest.queryUserDevices().fire(
 			new Receiver<List<UserDeviceProxy>>() {
 				public void onFailure(ServerFailure error) {
+					Window.alert(error.toString());
 				}
 
 				@Override
@@ -130,7 +127,8 @@ public class GtvhubWidget extends Composite {
 			});
     sendLinkButton.addClickHandler(new ClickHandler() {
     public void onClick(ClickEvent event) {
-    	if (tvSelection.getTvId() == null) {
+    	String tvId = tvSelection.getTvId();
+    	if (tvId == null) {
     		//no tv selected
     		setStatus("No TV selected", false);
     		return;
@@ -142,7 +140,7 @@ public class GtvhubWidget extends Composite {
         // Send a message using RequestFactory
         MessageRequest request = requestFactory.messageRequest();
         MessageProxy messageProxy = request.create(MessageProxy.class);
-        messageProxy.setRecipient(tvSelection.getTvId());
+        messageProxy.setRecipient(tvId);
         messageProxy.setMessage(link);
         Request<String> sendRequest = request.send().using(messageProxy);
         sendRequest.fire(new Receiver<String>() {
@@ -171,7 +169,7 @@ public class GtvhubWidget extends Composite {
     	String name = tvName.getValue();
     	if (name == null || name.length() == 0) {
     		name = tvCode.getValue();
-    		tvName.setValue(name);
+    		tvName.setValue(name.toUpperCase());
     	}
         setStatus("Connecting...", false);
         addTvButton.setEnabled(false);
@@ -184,6 +182,7 @@ public class GtvhubWidget extends Composite {
     				@Override
     				public void onSuccess(UserDeviceProxy userDevice) {
     					if (userDevice != null) {
+    						setStatus("", false);
     						tvSelection.addUserDevice(userDevice);
     					} else {
     						//device not found
@@ -195,24 +194,5 @@ public class GtvhubWidget extends Composite {
       }
     });
 
-    sayHelloButton.addClickHandler(new ClickHandler() {
-      public void onClick(ClickEvent event) {
-        sayHelloButton.setEnabled(false);
-        HelloWorldRequest helloWorldRequest = requestFactory.helloWorldRequest();
-        helloWorldRequest.getMessage().fire(new Receiver<String>() {
-          @Override
-          public void onFailure(ServerFailure error) {
-            sayHelloButton.setEnabled(true);
-            setStatus(error.getMessage(), true);
-          }
-
-          @Override
-          public void onSuccess(String response) {
-            sayHelloButton.setEnabled(true);
-            setStatus(response, response.startsWith("Failure:"));
-          }
-        });
-      }
-    });
-  }
+ }
 }

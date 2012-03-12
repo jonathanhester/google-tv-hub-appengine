@@ -49,10 +49,11 @@ public class RegistrationInfo {
     return deviceRegistrationId;
   }
 
-  public void register() {
+  public String register() {
     log.info("register " + this);
+    DeviceInfo deviceInfo = null;
     try {
-      doRegister(getDeviceRegistrationId(), "ac2dm", getDeviceId(), getAccountName());
+      deviceInfo = doRegister(getDeviceRegistrationId(), "ac2dm", getDeviceId(), getDeviceId());
     } catch (Exception e) {
       log.info("Got exception in registration: " + e + " - " + e.getMessage());
       for (StackTraceElement ste : e.getStackTrace()) {
@@ -60,6 +61,10 @@ public class RegistrationInfo {
       }
     }
     log.info("Successfully registered");
+    if (deviceInfo == null) {
+    	return "";
+    }
+    return deviceInfo.getCode();
   }
 
   public void setDeviceId(String deviceId) {
@@ -76,10 +81,10 @@ public class RegistrationInfo {
         + deviceRegistrationId + "]";
   }
 
-  public void unregister() {
+  public String unregister() {
     log.info("unregister " + this);
     try {
-      doUnregister(getDeviceRegistrationId(), getAccountName());
+      doUnregister(getDeviceRegistrationId(), getDeviceId());
     } catch (Exception e) {
       log.info("Got exception in unregistration: " + e + " - " + e.getMessage());
       for (StackTraceElement ste : e.getStackTrace()) {
@@ -87,19 +92,12 @@ public class RegistrationInfo {
       }
     }
     log.info("Successfully unregistered");
+    return "";
   }
 
-  private String getAccountName() {
-    UserService userService = UserServiceFactory.getUserService();
-    User user = userService.getCurrentUser();
-    if (user == null) {
-      throw new RuntimeException("No one logged in");
-    }
-    return user.getEmail();
-  }
-
-  private void doRegister(String deviceRegistrationId, String deviceType, String deviceId,
+  private DeviceInfo doRegister(String deviceRegistrationId, String deviceType, String deviceId,
       String accountName) throws Exception {
+	DeviceInfo device = null;
     log.info("in register: accountName = " + accountName);
     PersistenceManager pm = PMF.get().getPersistenceManager();
     try {
@@ -134,7 +132,6 @@ public class RegistrationInfo {
       Key key = KeyFactory.createKey(DeviceInfo.class.getSimpleName(), accountName + suffix);
       log.info("key = " + key);
 
-      DeviceInfo device = null;
       try {
         device = pm.getObjectById(DeviceInfo.class, key);
       } catch (JDOObjectNotFoundException e) {
@@ -151,13 +148,13 @@ public class RegistrationInfo {
       }
 
       pm.makePersistent(device);
-      return;
     } catch (Exception e) {
       log.info("Caught exception: " + e);
       throw e;
     } finally {
       pm.close();
     }
+    return device;
   }
 
   private void doUnregister(String deviceRegistrationID, String accountName) {

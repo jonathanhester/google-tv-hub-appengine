@@ -1,5 +1,6 @@
 package com.jonathanhester.gtvhub.server;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,7 +28,11 @@ public class DataStore {
 					+ userId
 					+ "'");
 			List<UserDevice> list = (List<UserDevice>) query.execute();
-			return list;
+			ArrayList<UserDevice> myList = new ArrayList<UserDevice>();
+			for (int i=0; i < list.size(); i++) {
+				myList.add(list.get(i));
+			}
+			return myList;
 		} catch (RuntimeException e) {
 			log.severe("Error finding user: " + userId + "," + " " + e.getMessage());
 			throw e;
@@ -45,7 +50,7 @@ public class DataStore {
 		try {
 			Query query = pm.newQuery("select from "
 					+ DeviceInfo.class.getName() + " where code=='"
-					+ deviceCode
+					+ deviceCode.toUpperCase()
 					+ "'");
 			List<DeviceInfo> list = (List<DeviceInfo>) query.execute();
 			return list.size() == 0 ? null : list.get(0);

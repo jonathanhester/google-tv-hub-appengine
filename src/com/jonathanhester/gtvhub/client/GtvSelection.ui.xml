@@ -8,6 +8,6 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<div ui:field="status"></div>
-		<g:Button styleName="{style.important}" ui:field="button" />
+		<g:VerticalPanel ui:field="panel"></g:VerticalPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

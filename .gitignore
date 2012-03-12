@@ -3,4 +3,5 @@ war/gtvhub
 war/WEB-INF/appengine-generated
 war/WEB-INF/classes
 war/WEB-INF/deploy
-
+.gwt/
+.apt_generated/

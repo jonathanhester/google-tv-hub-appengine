@@ -20,6 +20,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.jonathanhester.gtvhub.shared.AndroidCommandTypes;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -112,8 +113,7 @@ public class SendMessage {
     if (message.length() > 1000) {
       message = message.substring(0, 1000) + "[...]";
     }
-
     return push.sendNoRetry(deviceInfo.getDeviceRegistrationID(), collapseKey, "sender", sender,
-        "message", message);
+        "message", Integer.toString(AndroidCommandTypes.OPEN_LINK), "link", message);
   }
 }

@@ -20,6 +20,7 @@ public class GtvhubService {
 			userDevice.setTvName(tvName);
 			userDevice.setUserId(this.getUserId());
 			DataStore.createUserDevice(userDevice);
+			return userDevice;
 		}
 		return null;
 	}
@@ -45,9 +46,7 @@ public class GtvhubService {
 	@ServiceMethod
 	public List<UserDevice> queryUserDevices() {
 		String userId = this.getUserId();
-	    
 	    List<UserDevice> userDevices = DataStore.queryUserDevices(userId);
-	    
 	    return userDevices;
 	}
 	
