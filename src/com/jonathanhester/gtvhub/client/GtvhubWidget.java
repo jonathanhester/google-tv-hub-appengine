@@ -77,17 +77,6 @@ public class GtvhubWidget extends Composite {
   @UiField
   DivElement pushLinkContainer;
 
-  /**
-   * Timer to clear the UI.
-   */
-  Timer timer = new Timer() {
-    @Override
-    public void run() {
-      status.setInnerText("");
-      status.setClassName(STATUS_NONE);
-    }
-  };
-
   private void setStatus(String message, boolean error) {
     status.setInnerText(message);
     if (error) {
@@ -100,7 +89,6 @@ public class GtvhubWidget extends Composite {
       }
     }
 
-    timer.schedule(STATUS_DELAY);
   }
 
   public GtvhubWidget() {
@@ -161,20 +149,22 @@ public class GtvhubWidget extends Composite {
     
     addTvButton.addClickHandler(new ClickHandler() {
     public void onClick(ClickEvent event) {
-    	if (tvCode.getValue() == null || tvCode.getValue().length() == 0) {
+    	String tvCodeValue = tvCode.getValue().toUpperCase();
+    	String tvNameValue = tvName.getValue();
+    	if (tvCodeValue == null || tvCodeValue.length() == 0) {
     		//no tv selected
     		setStatus("No code input", false);
     		return;
     	}
-    	String name = tvName.getValue();
+    	String name = tvNameValue;
     	if (name == null || name.length() == 0) {
-    		name = tvCode.getValue();
+    		name = tvCodeValue;
     		tvName.setValue(name.toUpperCase());
     	}
         setStatus("Connecting...", false);
         addTvButton.setEnabled(false);
         GtvhubRequest gtvRequest = requestFactory.gtvhubRequest();
-        gtvRequest.createUserDevice(tvCode.getValue(), tvName.getValue()).fire(
+        gtvRequest.createUserDevice(tvCodeValue, tvNameValue).fire(
     			new Receiver<UserDeviceProxy>() {
     				public void onFailure(ServerFailure error) {
     				}
@@ -182,7 +172,7 @@ public class GtvhubWidget extends Composite {
     				@Override
     				public void onSuccess(UserDeviceProxy userDevice) {
     					if (userDevice != null) {
-    						setStatus("", false);
+    						setStatus(userDevice.getTvName() + " added!", false);
     						tvSelection.addUserDevice(userDevice);
     					} else {
     						//device not found

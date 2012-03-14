@@ -92,7 +92,7 @@ public class DeviceInfo {
 	}
 
 	public void setUniqueCode() {
-		final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		final String AB = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
 		Random rnd = new Random();
 		int len = 7;
 		StringBuilder sb = new StringBuilder(len);
